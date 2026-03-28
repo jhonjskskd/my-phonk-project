@@ -1,12 +1,12 @@
-/* Reset the browser defaults */
-html, body {
+/* style.css */
+body {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Prevents scrollbars from appearing */
-    background-color: #000; /* True black for the phonk vibe */
+    overflow: hidden; /* Prevents scrolling */
+    background-color: #000; /* Pitch black for the best neon contrast */
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
-/* Style the "Tap to Start" overlay */
 #overlay {
     position: absolute;
     top: 0;
@@ -17,29 +17,29 @@ html, body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: #0ff; /* Neon Cyan */
-    font-family: 'Courier New', Courier, monospace;
-    text-align: center;
+    background-color: rgba(0, 0, 0, 0.7); /* Slight fade over the background */
     z-index: 10;
-    pointer-events: none; /* Allows the click to pass through to the code */
-    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+    pointer-events: none; /* Allows your tap to reach the sketch.js code */
 }
 
-#overlay h1 {
-    font-size: 3rem;
-    letter-spacing: 15px;
+h1 {
+    color: #00ffff; /* Cyan neon */
+    font-size: 2.5rem;
+    letter-spacing: 8px;
     margin-bottom: 10px;
+    text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    text-align: center;
+}
+
+p {
+    color: #ffffff;
+    font-size: 1rem;
+    letter-spacing: 2px;
+    opacity: 0.8;
     text-transform: uppercase;
 }
 
-#overlay p {
-    font-size: 1.2rem;
-    letter-spacing: 5px;
-    opacity: 0.8;
+/* Canvas styling to ensure it fills the screen */
+canvas {
+    display: block;
 }
-
-/* Hide the overlay once the music starts (controlled by JS) */
-.hidden {
-    display: none !important;
-}
-
