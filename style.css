@@ -1,0 +1,45 @@
+/* Reset the browser defaults */
+html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevents scrollbars from appearing */
+    background-color: #000; /* True black for the phonk vibe */
+}
+
+/* Style the "Tap to Start" overlay */
+#overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: #0ff; /* Neon Cyan */
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+    z-index: 10;
+    pointer-events: none; /* Allows the click to pass through to the code */
+    text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+}
+
+#overlay h1 {
+    font-size: 3rem;
+    letter-spacing: 15px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+}
+
+#overlay p {
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    opacity: 0.8;
+}
+
+/* Hide the overlay once the music starts (controlled by JS) */
+.hidden {
+    display: none !important;
+}
+
