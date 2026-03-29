@@ -3,18 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phonk Drift Project</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Phonk Drift All-In-One</title>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
+
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #000; font-family: sans-serif; }
+        #overlay {
+            position: absolute; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            background: rgba(0,0,0,0.6); z-index: 10; pointer-events: none;
+        }
+        h1 { color: #0ff; font-size: 2.5rem; letter-spacing: 8px; text-shadow: 0 0 15px #0ff; margin: 0; }
+        p { color: #fff; letter-spacing: 2px; opacity: 0.8; margin-top: 10px; }
+    </style>
 </head>
 <body>
+
     <div id="overlay">
-        <h1>PHONK PROJECT</h1>
-        <p>TAP TO START THE DRIFT</p>
+        <h1 id="status-title">PHONK PROJECT</h1>
+        <p id="status-msg">LOADING VIBE...</p>
     </div>
 
-    <script src="sketch.js"></script>
+    <script>
+        let song, fft;
+        let isLoaded = false;
+
+        function preload() {
+            // This links to the phonk.mp3 in your GitHub root
+            song = loadSound('phonk.mp3', 
+                () => { 
+                    isLoaded = true; 
+                    document.getElementById('status-msg').innerText = "TAP TO START THE DRIFT";
+                },
+                (err) => { 
+                    document.getElementById('status-msg').innerText = "ERROR: FILE NOT FOUND";
+                }
+            );
+        }
+
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+            fft = new p5.FFT(0.8, 128);
+        }
+
+        function draw() {
+            background(5, 0, 15, 45); // Motion blur
+
+            if (isLoaded && song.isPlaying()) {
+                let spectrum = fft.analyze();
+                let bass = fft.getEnergy("bass");
+                let treble = fft.getEnergy("treble");
+
+                translate(width/2, height/2);
+
+                // ANIME DANCER MOTION
+                let bounce = map(bass, 100, 255, 0.8, 1.5);
+                scale(bounce);
+                
+                // Neon Glow
+                drawingContext.shadowBlur = 25;
+                drawingContext.shadowColor = color(0, 255, 255);
+                stroke(0, 255, 255);
+                strokeWeight(4);
+                noFill();
+
+                // Character
+                ellipse(0, -80, 50, 60); // Head
+                let warp = map(treble, 0, 255, -15, 15);
+                rect(-25 + warp, -50, 50, 110, 10); // Body
+                line(-30 + warp, -20, -70, 20); // Arm L
+                line(30 + warp, -20, 70, 20);  // Arm R
+            }
+        }
+
+        // Use touchStarted for better mobile response
+        function touchStarted() {
+            if (getAudioContext().state !== 'running') {
+                getAudioContext().resume();
+            }
+
+            if (isLoaded) {
+                if (song.isPlaying()) {
+                    song.pause();
+                } else {
+                    song.play();
+                    document.getElementById('overlay').style.display = 'none';
+                }
+            }
+            return false;
+        }
+
+        function windowResized() {
+            resizeCanvas(windowWidth, windowHeight);
+        }
+    </script>
 </body>
 </html>
