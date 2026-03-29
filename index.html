@@ -3,40 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shadow Monarch | Phonk Drift</title>
+    <title>Solo Leveling | Phonk Awakening</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/addons/p5.sound.min.js"></script>
     <style>
         body { margin: 0; padding: 0; overflow: hidden; background-color: #030305; font-family: 'Courier New', Courier, monospace; }
         
-        /* THE SOLO LEVELING SYSTEM UI */
+        /* THE SYSTEM UI OVERLAY */
         #overlay {
             position: absolute; width: 100%; height: 100%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            background: radial-gradient(circle, rgba(15,5,30,0.9) 0%, rgba(0,0,0,1) 100%);
-            z-index: 10; cursor: pointer; backdrop-filter: blur(5px);
+            background: radial-gradient(circle, rgba(20,0,40,0.95) 0%, rgba(0,0,0,1) 100%);
+            z-index: 10; cursor: pointer; backdrop-filter: blur(10px);
         }
         .system-box { 
-            border: 2px solid #6b21a8; /* Dark Purple border */
-            padding: 30px 40px; 
-            background: rgba(10, 0, 20, 0.8);
-            box-shadow: 0 0 30px rgba(107, 33, 168, 0.5);
+            border: 2px solid #a855f7; 
+            padding: 40px; 
+            background: rgba(15, 0, 30, 0.9);
+            box-shadow: 0 0 40px rgba(168, 85, 247, 0.4);
             text-align: center;
-            border-radius: 5px;
+            border-radius: 4px;
         }
-        h1 { color: #a855f7; font-size: 2.5rem; letter-spacing: 5px; text-shadow: 0 0 15px #a855f7; margin: 0; }
-        p { color: #d8b4fe; font-size: 1.2rem; letter-spacing: 3px; margin-top: 15px; font-weight: bold; }
-        
+        h1 { color: #a855f7; font-size: 2.5rem; letter-spacing: 6px; text-shadow: 0 0 20px #a855f7; margin: 0; }
+        p { color: #d8b4fe; font-size: 1.1rem; letter-spacing: 3px; margin-top: 20px; text-transform: uppercase; }
         .blink { animation: blinker 1.5s linear infinite; }
         @keyframes blinker { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
 
-    <div id="overlay" onclick="startDrift()">
+    <div id="overlay" onclick="startAwakening()">
         <div class="system-box">
             <h1 id="status-title">[ SYSTEM ]</h1>
-            <p id="status-msg" class="blink">LOADING ASSETS...</p>
+            <p id="status-msg" class="blink">LOADING MANA...</p>
         </div>
     </div>
 
@@ -47,124 +46,111 @@
         let speedLines = [];
 
         function preload() {
-            // Loading the image and song
+            // Loading exactly the files from your folder
             monarchImg = loadImage('dance.gif'); 
             song = loadSound('phonk.mp3', () => { 
                 isLoaded = true; 
-                document.getElementById('status-title').innerText = "[ DAILY QUEST SECURED ]";
-                document.getElementById('status-msg').innerText = "TAP TO AWAKEN";
+                document.getElementById('status-title').innerText = "[ QUEST SECURED ]";
+                document.getElementById('status-msg').innerText = "TAP TO ARISE";
             });
         }
 
         function setup() {
             createCanvas(windowWidth, windowHeight);
-            fft = new p5.FFT(0.85, 128); // Smoother audio reaction
+            fft = new p5.FFT(0.8, 128);
             
-            // Generate Speed Lines
-            for (let i = 0; i < 20; i++) {
-                speedLines.push({ x: random(-width, width), y: random(-height, height), speed: random(10, 30) });
+            // Background Speed Lines
+            for (let i = 0; i < 25; i++) {
+                speedLines.push({ 
+                    x: random(-width, width), 
+                    y: random(-height, height), 
+                    speed: random(15, 40) 
+                });
             }
         }
 
         function draw() {
-            // Deep purple/black motion blur trail
-            background(5, 0, 10, 80); 
+            // Dark purple/black with trails for movie look
+            background(5, 0, 15, 75); 
 
             if (isLoaded && song.isPlaying()) {
-                let spectrum = fft.analyze();
                 let bass = fft.getEnergy("bass");
                 let treble = fft.getEnergy("treble");
-                let mid = fft.getEnergy("mid");
 
-                // --- 1. THE CAMERA SHAKE ---
-                let shake = map(bass, 200, 255, 0, 20);
+                // --- 1. THE CAMERA ENGINE (Shake) ---
+                let shake = map(bass, 190, 255, 0, 18);
                 if (shake < 0) shake = 0;
                 translate(width/2 + random(-shake, shake), height/2 + random(-shake, shake));
 
-                // --- 2. CINEMATIC SPEED LINES (Moves faster on beat) ---
-                let lineSpeedMult = map(bass, 100, 255, 1, 3);
-                stroke(150, 0, 255, 40); // Purple lines
-                strokeWeight(2);
+                // --- 2. CINEMATIC SPEED LINES ---
+                stroke(168, 85, 247, 50);
+                strokeWeight(1.5);
                 for (let sl of speedLines) {
-                    line(sl.x, sl.y, sl.x + 100, sl.y);
-                    sl.x -= sl.speed * lineSpeedMult;
-                    if (sl.x < -width/2 - 100) { sl.x = width/2; sl.y = random(-height/2, height/2); }
+                    line(sl.x, sl.y, sl.x + 120, sl.y);
+                    sl.x -= sl.speed * (bass/100); 
+                    if (sl.x < -width/2 - 120) { sl.x = width/2; sl.y = random(-height/2, height/2); }
                 }
 
-                // --- 3. SHADOW AURA PARTICLES ---
-                if (bass > 160) {
+                // --- 3. SHADOW PARTICLES (Rising Up) ---
+                if (bass > 170) {
                     particles.push({
-                        x: random(-120, 120), 
-                        y: 200, // Starts at his feet
-                        s: random(4, 15), 
-                        op: 255,
-                        speedX: random(-2, 2),
-                        speedY: random(-3, -8)
+                        x: random(-150, 150), 
+                        y: 250, 
+                        s: random(5, 12), 
+                        op: 255
                     });
                 }
                 for (let i = particles.length - 1; i >= 0; i--) {
                     let p = particles[i];
                     noStroke();
-                    fill(120, 20, 255, p.op); // Deep Shadow Purple
-                    ellipse(p.x, p.y, p.s, p.s);
-                    p.x += p.speedX;
-                    p.y += p.speedY;
-                    p.op -= 6;
+                    fill(107, 33, 168, p.op);
+                    rect(p.x, p.y, p.s, p.s);
+                    p.y -= 6;
+                    p.op -= 5;
                     if (p.op <= 0) particles.splice(i, 1);
                 }
 
-                // --- 4. THE MONARCH (Breathing & Bouncing) ---
-                // The Breathing Effect (Moves up and down slightly even when quiet)
-                let breath = sin(frameCount * 0.05) * 5; 
-                let bounce = map(bass, 100, 255, 0.95, 1.25);
-                let glitchAmt = map(treble, 180, 255, 0, 30); 
+                // --- 4. THE MONARCH (Main Character) ---
+                let bounce = map(bass, 100, 255, 0.95, 1.3);
+                let glitchX = map(treble, 170, 255, 0, 25);
 
                 push();
                 scale(bounce);
-                translate(0, breath); // Apply breathing
                 imageMode(CENTER);
 
-                // RGB GLITCH FX (Splits when treble hits hard)
-                if (treble > 190) {
+                // RGB Glitch Effect
+                if (treble > 185) {
                     drawingContext.globalCompositeOperation = 'screen';
-                    tint(255, 0, 0, 150); // Red
-                    image(monarchImg, -glitchAmt, 0, 450, 650);
-                    tint(0, 255, 255, 150); // Cyan
-                    image(monarchImg, glitchAmt, 0, 450, 650);
+                    tint(255, 0, 0, 150); // Red Split
+                    image(monarchImg, -glitchX, random(-2,2), 450, 650);
+                    tint(0, 255, 255, 150); // Cyan Split
+                    image(monarchImg, glitchX, random(-2,2), 450, 650);
                     drawingContext.globalCompositeOperation = 'source-over';
                 }
 
-                // Main Character Layer
+                // Main Image
                 noTint();
                 image(monarchImg, 0, 0, 450, 650);
 
-                // Bass Flash (Pulses purple/blue on the kick drum)
-                if (bass > 210) {
-                    tint(150, 0, 255, map(bass, 210, 255, 0, 150));
-                    image(monarchImg, 0, 0, 450, 650);
-                    noTint();
-                }
+                // Bass Aura Flash
+                tint(168, 85, 247, map(bass, 200, 255, 0, 200));
+                image(monarchImg, 0, 0, 450, 650);
+                noTint();
                 pop();
 
-                // --- 5. THE GLOWING EYES ---
-                drawingContext.shadowBlur = 50;
-                drawingContext.shadowColor = color(0, 255, 255); // Cyan glow
+                // --- 5. THE GLOWING EYES (Targeting your specific pose) ---
+                drawingContext.shadowBlur = 45;
+                drawingContext.shadowColor = color(0, 255, 255);
                 stroke(255);
                 strokeWeight(5);
                 
-                // ADJUST THIS NUMBER IF EYES ARE TOO HIGH OR LOW
-                let eyeY = (-190 * bounce) + breath; 
-                let eyeWidth = 12;
-                
-                // Left Eye
-                line(-15, eyeY, -15 + eyeWidth, eyeY + 3);
-                // Right Eye
-                line(10, eyeY, 10 + eyeWidth, eyeY + 3);
+                let eyeY = -195 * bounce; 
+                line(-18, eyeY, -6, eyeY + 4); 
+                line(8, eyeY, 20, eyeY + 4);
             }
         }
 
-        // UNLOCK AUDIO ON MOBILE
-        function startDrift() {
+        function startAwakening() {
             if (getAudioContext().state !== 'running') {
                 getAudioContext().resume();
             }
