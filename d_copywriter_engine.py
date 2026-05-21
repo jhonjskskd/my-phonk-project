@@ -1,75 +1,105 @@
 import urllib.parse
+import random
 
 class CopywriterEngine:
     def __init__(self):
-        pass
+        """Initializes psychological frameworks and variations to keep pitches unique."""
+        # Casual email subject lines to bypass international spam filters
+        self.subject_variations = [
+            "Quick question regarding your \"{course}\" program",
+            "Feedback on your {course} syllabus (+ question)",
+            "Strategic bottleneck in your \"{course}\" setup?",
+            "Quick note on your {course} student funnel"
+        ]
+        
+        # Conversational text openings for mobile reading flow
+        self.wa_openings = [
+            "Hi {name}! Loved how you put together the syllabus for your \"{course}\" course on Udemy.",
+            "Hey {name}—came across your \"{course}\" course while auditing the {niche} space. Great work on the content structure!",
+            "Hi {name}, quick heads up. I was looking through your \"{course}\" course outline. The setup looks solid."
+        ]
+
+    def clean_course_title(self, raw_title):
+        """Extracts a tight, natural-sounding course topic from noisy, long SEO titles."""
+        try:
+            # Strip common trailing clutter
+            title = raw_title.split('|')[0].split('-')[0].split('—')[0].strip()
+            
+            # Remove aggressive marketplace keyword-stuffing phrases
+            fluff_words = [
+                "Complete", "The", "Bootcamp", "Course", "2026", "Masterclass", 
+                "Training", "Beginner to Advanced", "Ultimate", "Guide", "For Beginners",
+                "Certified", "Professional", "Introduction to", "With Projects"
+            ]
+            for word in fluff_words:
+                # Case insensitive replacement keeping layout natural
+                title = re.sub(r'\b' + re.escape(word) + r'\b', '', title, flags=re.IGNORECASE)
+                
+            clean_title = " ".join(title.split())
+            return clean_title if len(clean_title) > 3 else "Udemy specialization"
+        except:
+            return "online course"
 
     def build_custom_pitches(self, lead):
-        """Injects metrics into advanced psychological templates based on performance standing."""
+        """Generates deeply tailored, high-converting USD pitches referencing their exact course product."""
         name = lead["instructor_name"]
-        topic = lead["market_niche"]
+        raw_title = lead["primary_course_title"]
+        niche = lead["market_niche"]
         students = lead["student_count"]
         pixel = lead["has_meta_pixel"]
         
-        email_pitch = ""
-        whatsapp_pitch = ""
+        # Isolate the exact, naturally cleaned course asset name
+        specific_course = self.clean_course_title(raw_title)
 
-        # --- BUCKET A: THE STRUGGLING CREATOR (Under 2,000 Students) ---
-        if students < 2000:
-            lead_type = "STRUGGLING"
-            
-            # Email Script Drafting
-            email_pitch = (
-                f"Subject: Your {topic} course is a hidden gem (but hidden from Udemy search)\n\n"
-                f"Hi {name},\n\n"
-                f"I was looking through the {topic} category and came across your course. Your syllabus and "
-                f"delivery style are fantastic—easily on par with creators holding 20k+ enrollments. However, I noticed "
-                f"you currently have only {students} students enrolled.\n\n"
-                f"Here is the harsh reality of Udemy's search matrix: it aggressively buries newer courses without massive review volumes, "
-                f"killing your organic traffic. You've built a stellar product; letting it sit waiting for discovery is a losing game.\n\n"
-                f"I build automated external lead funnels on LinkedIn and X to locate students actively searching for help with {topic} "
-                f"and route them directly to your page via your instructor coupons. This triggers the algorithm into pushing you up the ranks.\n\n"
-                f"I've mapped out a quick 3-step blueprint to force outside traffic to your listing this week. Worth a 2-minute look if I send it over?\n\n"
-                f"Best,\nDavies | Partner Engine"
+        # Dynamic problem identification based on specific tracking deficits
+        if pixel == "No":
+            defect_analysis = (
+                f"your landing framework currently lacks an active Meta tracking pixel. "
+                f"This means you are leaking valuable student data daily from hot prospects who click your external links "
+                f"but bounce back without buying anything."
             )
-            
-            # WhatsApp Script Drafting
-            whatsapp_pitch = (
-                f"Hi {name}, love your course content on Udemy! The production style is excellent, but the search system "
-                f"is completely burying you because you have only {students} students. I built a quick 3-step strategy to "
-                f"inject outside buyers from X/LinkedIn straight to your course using your instructor coupons. Open to taking a look?"
+            proposed_solution = (
+                f"set up dedicated tracking architectures to run laser-targeted social retargeting funnels, "
+                f"recapturing those ready-to-buy professionals outside of Udemy's sandbox."
             )
-
-        # --- BUCKET B: THE ELITE CREATOR (High Enrollment Volume) ---
         else:
-            lead_type = "ELITE"
-            pixel_notice = ""
-            
-            if pixel == "No":
-                pixel_notice = "your landing page completely lacks a tracking pixel, meaning you lose hot student data daily."
-            else:
-                pixel_notice = "your social traffic pipelines aren't fully insulated outside of the Udemy environment."
-
-            # Email Script Drafting
-            email_pitch = (
-                f"Subject: Quick note on your top-tier {topic} course (and the 63% revenue leak)\n\n"
-                f"Hi {name},\n\n"
-                f"I was analyzing top-performing assets in the {topic} ecosystem and went through your reviews. Brilliant work "
-                f"on maintaining your high standing—it's rare to see students explicitly praising your material in 5-star feedback.\n\n"
-                f"Because you are leading the market, I did a technical assessment of your off-platform footprint and spotted a major structural leak: "
-                f"Right now, {pixel_notice} Worse, by staying entirely within Udemy's closed loop, you give up to 63% of your hard-earned revenue per sale to marketplace commissions.\n\n"
-                f"Your top competitors are already establishing independent external pipelines on X and LinkedIn to recapture 100% of their traffic margins.\n\n"
-                f"I build automated lead generation engines that capture these high-intent users on social platforms and bring them directly into your proprietary funnels.\n\n"
-                f"I've mapped out a quick 3-step strategy to insulate your #1 spot and halt the platform tax. Open to seeing the text breakdown?\n\n"
-                f"Best,\nDavies | Partner Engine"
+            defect_analysis = (
+                f"your entire student acquisition footprint is structurally locked inside Udemy's organic search loops. "
+                f"By leaving your traffic channels uninsulated, you're highly exposed to unexpected algorithm adjustments."
             )
-            
-            # WhatsApp Script Drafting
-            whatsapp_pitch = (
-                f"Hi {name}, brilliant work leading the Udemy market for {topic}! I ran a quick assessment on your external layout "
-                f"and noticed a massive revenue leak. Udemy is taking up to a 63% cut of your organic sales. I built an independent lead engine "
-                f"concept for your course so you can keep 100% of your margins off-platform. Can I drop the 3-step breakdown here?"
+            proposed_solution = (
+                f"deploy automated organic scraping engines on LinkedIn and X to source high-ticket professionals "
+                f"actively looking for private training, routing them directly into your high-margin checkout flows."
             )
 
-        return lead_type, email_pitch, whatsapp_pitch
-      
+        # --- CHOOSE RANDOMIZED VARIATIONS TO PREVENT MASS SPAM BLOCKS ---
+        subject_line = random.choice(self.subject_variations).format(course=specific_course)
+        wa_start = random.choice(self.wa_openings).format(name=name, course=specific_course, niche=niche)
+
+        # --- PREMIUM HIGH-CONVERTING EMAIL ARCHITECTURE ---
+        email_pitch = (
+            f"Subject: {subject_line}\n\n"
+            f"Hi {name},\n\n"
+            f"I was auditing the {niche} ecosystem this week and spent some time going over your curriculum layout for \"{raw_title}\". "
+            f"The progression of your lectures is highly intuitive, and it's clear you've built a stellar instructional asset.\n\n"
+            f"However, analyzing your configuration from an external marketing perspective, I noticed a severe operational leak: {defect_analysis}\n\n"
+            f"Since you already have a verified foundation with around {students:,} students, you've clearly proven market demand. "
+            f"But relying exclusively on a closed marketplace means you are heavily subjected to platform rules, while handing over up to 63% of your organic sales to marketplace commissions.\n\n"
+            f"I build automated lead generation engines designed specifically for technical creators. We actively track down high-intent clients across LinkedIn and X who are searching for solutions in the {niche} space, and guide them straight to your offers.\n\n"
+            f"This gives you direct control over your traffic pipelines, isolates your brand from marketplace platform taxes, and keeps 100% of your margins. I’ve mapped out a quick 3-step acquisition blueprint built explicitly around your \"{specific_course}\" curriculum.\n\n"
+            f"Would you be open to reviewing the technical text breakdown over the next couple of days?\n\n"
+            f"Best regards,\n"
+            f"Davies Demilade\n"
+            f"Lead Generation Specialist | @DaviesPartner Solutions"
+        )
+
+        # --- PUNCHY, HIGH-CONVERTING WHATSAPP MOBI-SCRIPT ---
+        whatsapp_pitch = (
+            f"{wa_start} The problem is, relying 100% on Udemy's internal search algorithms means giving up a massive "
+            f"chunk of your organic profit margins to marketplace fees. I mapped out a private 3-step client engine to scrape "
+            f"high-intent buyers off LinkedIn/X and route them directly into your funnel so you keep 100% of the cash per sale. "
+            f"Do you mind if I drop the quick text strategy breakdown right here?"
+        )
+
+        return "STRIVING_CREATOR", email_pitch, whatsapp_pitch
+                
