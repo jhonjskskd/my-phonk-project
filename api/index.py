@@ -2,39 +2,66 @@ from flask import Flask, jsonify
 import sys
 import os
 
-# Ensure Python can look in the root directory for future modules
+# Instruct Python to search the root directory for our custom script assets
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Import from our cleanly named module variable
+from a_udemy_collector import UdemyMetricCollector
 
 app = Flask(__name__)
 
 @app.route('/')
 @app.route('/api')
 def run_pipeline():
+    """Executes the core pipeline segments safely inside Vercel's memory layers."""
     try:
-        print("🚀 Vercel Webhook Triggered: Core Engine Online.")
+        print("🚀 Davies Partner Engine: Initializing Core Live Extractions...")
         
-        # This is our test data placeholder. We will replace this with real data in the next step!
-        sample_database = [
-            {
-                "instructor_name": "Test Instructor",
-                "market_niche": "python programming",
-                "pipeline_status": "CORE_ROUTER_ONLINE"
-            }
+        collector = UdemyMetricCollector()
+        db = []
+        
+        # High-intent niches to pull right away
+        target_sectors = [
+            "python programming", 
+            "real estate marketing", 
+            "crypto trading"
         ]
+        
+        total_scraped_raw = 0
+        for sector in target_sectors:
+            raw_data = collector.fetch_udemy_pool(sector, page=1)
+            db, new_count = collector.process_raw_batch(raw_data, sector, db)
+            total_scraped_raw += new_count
 
+        # Structural validation checkpoint
+        if not db:
+            return jsonify({
+                "status": "idle",
+                "engine": "Davies_Partner_Udemy_Engine_2026",
+                "message": "Marketplace query returned blank. Throttling active to remain stealthy."
+            }), 200
+
+        # Output a pristine status dashboard response to your phone browser
         return jsonify({
             "status": "success",
             "engine": "Davies_Partner_Udemy_Engine_2026",
-            "message": "Base deployment successful! The router is completely live.",
-            "data_preview": sample_database
+            "pipeline_stage": "STAGE_1_COLLECTION_COMPLETE",
+            "metrics": {
+                "total_sectors_scanned": len(target_sectors),
+                "raw_listings_processed": total_scraped_raw,
+                "unique_leads_in_memory": len(db)
+            },
+            "data_preview": db[:3]  # Previews the first 3 high-intent leads found
         }), 200
 
     except Exception as e:
+        print(f"❌ Core Pipeline Exception: {str(e)}")
         return jsonify({
             "status": "error",
-            "message": f"Pipeline configuration error: {str(e)}"
+            "engine": "Davies_Partner_Udemy_Engine_2026",
+            "error_log": str(e)
         }), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
-      
+            
