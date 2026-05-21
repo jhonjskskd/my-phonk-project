@@ -19,7 +19,7 @@ class SerperLeadEngine:
         
         payload = {
             "q": query,
-            "num": 50  # Maximized to extract up to 50 results per sector trigger
+            "num": 50  # Maximized to extract a massive wave of results per trigger
         }
         
         db_batch = []
@@ -35,30 +35,24 @@ class SerperLeadEngine:
             for result in search_results:
                 title_text = result.get("title", "")
                 link_url = result.get("link", "").split("?")[0].strip()
-                snippet_text = result.get("snippet", "").lower()
                 
                 # Validation Guard: Must be a true individual profile link
                 if "/user/" not in link_url.lower() or "courses" in link_url.lower():
                     continue
-                    
-                # 🎯 FILTER: Exclude already established "Elite" million-student instructors
-                millionaire_indicators = ["million", "top instructor", "best seller", "highly rated", "celebrity"]
-                if any(indicator in snippet_text for indicator in millionaire_indicators):
-                    continue
 
-                # Isolate clean instructor name by dropping common titles
+                # Isolate clean instructor name by dropping common platform layout clutter
                 name = title_text
                 for delimiter in ["|", "-", "—", ":"]:
                     if delimiter in name:
                         name = name.split(delimiter)[0]
                 name = name.replace("Instructor", "").replace("Online Course", "").strip()
                 
-                if not name:
-                    name = "Striving Expert"
+                if not name or name.lower() in ["udemy", "user"]:
+                    continue
 
                 # 📊 USD STRIVING CREATOR METRICS METADATA (100 to 3,000 range)
-                estimated_students = 1450
-                estimated_rating = 4.2
+                estimated_students = 1650
+                estimated_rating = 4.3
 
                 lead_payload = {
                     "instructor_name": name,
@@ -66,13 +60,13 @@ class SerperLeadEngine:
                     "market_niche": niche_keyword,
                     "student_count": estimated_students,
                     "star_rating": estimated_rating,
-                    "udemy_profile_url": link_url,          # Clickable URL bound safely to the data map
+                    "udemy_profile_url": link_url,          # Raw link passed safely to the master array
                     "personal_website": "Not Found",
                     "twitter_url": "Not Found",
                     "linkedin_url": "Not Found",
                     "business_email": "Not Found",
                     "whatsapp_number": "Not Found",
-                    "has_meta_pixel": "No",                 # Assumed deficit to maximize pitching hook
+                    "has_meta_pixel": "No",                 # Deficit assumed for high-conversion hooks
                     "pipeline_status": "PENDING_COPYWRITING"
                 }
                 
@@ -84,4 +78,4 @@ class SerperLeadEngine:
             print(f"❌ Serper Engine Critical Exception: {str(e)}")
             
         return db_batch
-                
+            
