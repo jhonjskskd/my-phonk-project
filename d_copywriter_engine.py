@@ -1,5 +1,6 @@
 import urllib.parse
 import random
+import re
 
 class CopywriterEngine:
     def __init__(self):
@@ -32,7 +33,6 @@ class CopywriterEngine:
                 "Certified", "Professional", "Introduction to", "With Projects"
             ]
             for word in fluff_words:
-                # Case insensitive replacement keeping layout natural
                 title = re.sub(r'\b' + re.escape(word) + r'\b', '', title, flags=re.IGNORECASE)
                 
             clean_title = " ".join(title.split())
@@ -58,21 +58,13 @@ class CopywriterEngine:
                 f"This means you are leaking valuable student data daily from hot prospects who click your external links "
                 f"but bounce back without buying anything."
             )
-            proposed_solution = (
-                f"set up dedicated tracking architectures to run laser-targeted social retargeting funnels, "
-                f"recapturing those ready-to-buy professionals outside of Udemy's sandbox."
-            )
         else:
             defect_analysis = (
                 f"your entire student acquisition footprint is structurally locked inside Udemy's organic search loops. "
                 f"By leaving your traffic channels uninsulated, you're highly exposed to unexpected algorithm adjustments."
             )
-            proposed_solution = (
-                f"deploy automated organic scraping engines on LinkedIn and X to source high-ticket professionals "
-                f"actively looking for private training, routing them directly into your high-margin checkout flows."
-            )
 
-        # --- CHOOSE RANDOMIZED VARIATIONS TO PREVENT MASS SPAM BLOCKS ---
+        # Choose randomized variations to prevent mass template blocks
         subject_line = random.choice(self.subject_variations).format(course=specific_course)
         wa_start = random.choice(self.wa_openings).format(name=name, course=specific_course, niche=niche)
 
