@@ -23,10 +23,7 @@ class CopywriterEngine:
     def clean_course_title(self, raw_title):
         """Extracts a tight, natural-sounding course topic from noisy, long SEO titles."""
         try:
-            # Strip common trailing clutter
             title = raw_title.split('|')[0].split('-')[0].split('—')[0].strip()
-            
-            # Remove aggressive marketplace keyword-stuffing phrases
             fluff_words = [
                 "Complete", "The", "Bootcamp", "Course", "2026", "Masterclass", 
                 "Training", "Beginner to Advanced", "Ultimate", "Guide", "For Beginners",
@@ -48,20 +45,27 @@ class CopywriterEngine:
         students = lead["student_count"]
         pixel = lead["has_meta_pixel"]
         
-        # Isolate the exact, naturally cleaned course asset name
         specific_course = self.clean_course_title(raw_title)
 
-        # Dynamic problem identification based on specific tracking deficits
+        # Dynamic problem identification and solutions based on deficits
         if pixel == "No":
             defect_analysis = (
                 f"your landing framework currently lacks an active Meta tracking pixel. "
                 f"This means you are leaking valuable student data daily from hot prospects who click your external links "
                 f"but bounce back without buying anything."
             )
+            proposed_solution = (
+                f"set up dedicated tracking architectures to run laser-targeted social retargeting funnels, "
+                f"recapturing those ready-to-buy professionals outside of Udemy's sandbox."
+            )
         else:
             defect_analysis = (
                 f"your entire student acquisition footprint is structurally locked inside Udemy's organic search loops. "
                 f"By leaving your traffic channels uninsulated, you're highly exposed to unexpected algorithm adjustments."
+            )
+            proposed_solution = (
+                f"deploy automated organic scraping engines on LinkedIn and X to source high-ticket professionals "
+                f"actively looking for private training, routing them directly into your high-margin checkout flows."
             )
 
         # Choose randomized variations to prevent mass template blocks
@@ -75,6 +79,7 @@ class CopywriterEngine:
             f"I was auditing the {niche} ecosystem this week and spent some time going over your curriculum layout for \"{raw_title}\". "
             f"The progression of your lectures is highly intuitive, and it's clear you've built a stellar instructional asset.\n\n"
             f"However, analyzing your configuration from an external marketing perspective, I noticed a severe operational leak: {defect_analysis}\n\n"
+            f"My recommendation is to {proposed_solution}\n\n"
             f"Since you already have a verified foundation with around {students:,} students, you've clearly proven market demand. "
             f"But relying exclusively on a closed marketplace means you are heavily subjected to platform rules, while handing over up to 63% of your organic sales to marketplace commissions.\n\n"
             f"I build automated lead generation engines designed specifically for technical creators. We actively track down high-intent clients across LinkedIn and X who are searching for solutions in the {niche} space, and guide them straight to your offers.\n\n"
@@ -94,4 +99,4 @@ class CopywriterEngine:
         )
 
         return "STRIVING_CREATOR", email_pitch, whatsapp_pitch
-                
+        
