@@ -99,4 +99,4 @@ class CopywriterEngine:
         )
 
         return "STRIVING_CREATOR", email_pitch, whatsapp_pitch
-        
+                
