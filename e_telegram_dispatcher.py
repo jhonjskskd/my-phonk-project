@@ -1,6 +1,6 @@
 import requests
 
-# 🛡️ 2026 DAVIES VERIFIED LIVE CONFIGURATION 
+# 🛡️ DAVIES VERIFIED LIVE CONFIGURATION (2026)
 BOT_TOKEN = "8673029559:AAF4zFJC80TERVUMTvZ9ieSMWM0K-2vWGTI"
 CHAT_ID = "7909543900"
 
@@ -10,44 +10,52 @@ class TelegramDispatcher:
         self.telegram_url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
 
     def dispatch_lead_card(self, lead):
-        """Formats the collected lead dossier parameters into a premium Markdown layout 
-        and dispatches it directly to your phone.
+        """Filters, formats, and dispatches international striving creator leads 
+        directly to your Telegram channel.
         """
+        phone = lead.get("whatsapp_number", "Not Found")
+        
+        # 🚫 STAGE PANIC GUARD: Instantly drop any lead with a Nigerian (+234) phone layout
+        if phone.startswith("+234") or phone.startswith("234"):
+            print(f"⏩ Dropping {lead['instructor_name']} - Reason: Domestic Country Code detected.")
+            return False
+
         name = lead["instructor_name"]
         niche = lead["market_niche"].upper()
         title = lead["primary_course_title"]
         students = lead["student_count"]
         rating = lead["star_rating"]
         email = lead["business_email"]
-        phone = lead["whatsapp_number"]
         pixel = lead["has_meta_pixel"]
-        segment = lead["instructor_segment"]
         wa_link = lead["whatsapp_launch_link"]
+        udemy_url = lead["udemy_profile_url"]
+        email_pitch = lead.get("compiled_email_pitch", "No email pitch generated.")
 
         # Dynamic validation indicators for technical audits
         pixel_status = "✅ ACTIVE" if pixel == "Yes" else "❌ MISSING (Pixel Deficit Hook)"
 
-        # PREMIUM DISPATCH AGENCY BRANDING LAYOUT
+        # HIGH-CONVERTING INTERNATIONAL TARGET LAYOUT
         message = (
-            f"💎 **{segment} LEADER FOUND**\n"
+            f"🚀 **STRIVING CREATOR FOUND (USD PROSPECT)**\n"
             "━━━━━━━━━━━━━━━━━━━━\n"
-            f"👤 **Instructor Name:** {name}\n"
+            f"👤 **Instructor:** {name}\n"
             f"📚 **Target Niche:** {niche}\n"
             f"📊 **Market Traction:** {students:,} Students | {rating} ⭐\n"
             f"🌐 **Meta Tracking Pixel:** {pixel_status}\n"
             "━━━━━━━━━━━━━━━━━━━━\n"
             f"📧 **Business Email:** `{email}`\n"
-            f"📱 **WhatsApp Number:** `{phone}`\n"
+            f"📱 **WhatsApp ID:** `{phone if phone != 'Not Found' else 'Searching...'}`\n"
             "━━━━━━━━━━━━━━━━━━━━\n"
-            f"📝 **Primary Course Title:**\n\"{title[:75]}...\"\n"
+            f"🔗 [VIEW UDEMY PROFILE]({udemy_url})\n"
             "━━━━━━━━━━━━━━━━━━━━\n"
         )
 
-        # Append actionable launch triggers if links are active
-        if "http" in wa_link:
+        # Append actionable launch triggers based on contact availability
+        if "http" in wa_link and phone != "Not Found" and phone != "1234567890":
             message += f"📥 [LAUNCH PITCH ON WHATSAPP]({wa_link})\n"
         else:
-            message += "📥 *Action Protocol:* No direct WhatsApp connection generated.\n"
+            # Alternate international action link if no phone is scraped yet
+            message += f"📥 [PITCH DIRECTLY ON PROFILE]({udemy_url})\n"
 
         message += (
             "━━━━━━━━━━━━━━━━━━━━\n"
@@ -58,7 +66,7 @@ class TelegramDispatcher:
             "chat_id": CHAT_ID,
             "text": message,
             "parse_mode": "Markdown",
-            "disable_web_page_preview": True # Keeps layout clean without ugly preview boxes
+            "disable_web_page_preview": True  # Keeps layout clean without ugly preview boxes
         }
 
         try:
@@ -72,21 +80,4 @@ class TelegramDispatcher:
         except Exception as e:
             print(f"❌ Dispatch Sub-Engine Network Error: {str(e)}")
             return False
-
-# Local sandbox verification execution code
-if __name__ == "__main__":
-    dispatcher = TelegramDispatcher()
-    mock_lead = {
-        "instructor_name": "Jose Portilla",
-        "market_niche": "python programming",
-        "primary_course_title": "Complete Python Bootcamp",
-        "student_count": 320000,
-        "star_rating": 4.6,
-        "business_email": "Not Found",
-        "whatsapp_number": "+2348123456789",
-        "has_meta_pixel": "No",
-        "instructor_segment": "ELITE",
-        "whatsapp_launch_link": "https://api.whatsapp.com/send?phone=2348123456789&text=Test"
-    }
-    dispatcher.dispatch_lead_card(mock_lead)
     
